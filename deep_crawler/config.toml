@@ -1,0 +1,17 @@
+[api]
+openai_base   = "http://192.168.100.199:5515/v1"
+openai_key    = "none"
+chat_model    = "mistral-small-3.2-24b-instruct-2506"
+embed_model   = "text-embedding-granite-embedding-278m-multilingual"
+
+[firecrawl]
+base_url      = "http://localhost:3002"
+concurrency   = 8            # async tasks
+limit_per_url = 8            # pages per seed
+
+[search]
+searx_url         = "https://searx.sprk.ro/search"
+urls_per_keyword  = 4
+
+[index]
+snippets_per_sec  = 8
