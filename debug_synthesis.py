@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
 import sys
-import os
-sys.path.insert(0, '/root/deeperres')
+from pathlib import Path
+
+# Ensure project root is on the import path
+ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
 
 print("Testing LLM synthesis directly...")
 

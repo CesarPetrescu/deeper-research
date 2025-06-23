@@ -7,7 +7,28 @@ import textwrap
 from pathlib import Path
 from tqdm import tqdm
 from deep_crawler.crawler.firecrawl_async import crawl_urls
-from deep_crawler.llm import planner, summariser
+
+try:
+    # Prefer enhanced planner and summariser with LangChain features
+    from deep_crawler.llm.enhanced_planner import plan_with_sections
+    from deep_crawler.llm.enhanced_summariser import summarise_section
+    ENHANCED = True
+except ImportError:
+    # Fallback to basic implementations if enhanced modules are unavailable
+    from deep_crawler.llm import planner, summariser
+
+    def plan_with_sections(question: str):
+        """Basic outline planning with section extraction."""
+        outline, kws = planner.plan(question)
+        sections = [
+            line.strip("# ").strip()
+            for line in outline.splitlines()
+            if line.startswith("## ")
+        ]
+        return outline, kws, sections
+
+    summarise_section = summariser.summarise_section
+    ENHANCED = False
 from deep_crawler.indexing import faiss_store
 from deep_crawler.crawler.extractor import simple_extract
 from deep_crawler.llm.verifier import dangling_citations
@@ -25,10 +46,10 @@ def searx(q, n):
 
 def main(question: str):
     print(f"🔍 Researching: {question}")
-    
-    print(f"🤖 AI Planner: Analyzing question and creating research strategy...")
-    outline, kws = planner.plan(question)
-    print(f"📋 Research Plan: {len(kws)} keywords, {len([l for l in outline.splitlines() if l.startswith('##')])} sections")
+
+    print("🤖 AI Planner: Analyzing question and creating research strategy...")
+    outline, kws, sections = plan_with_sections(question)
+    print(f"📋 Research Plan: {len(kws)} keywords, {len(sections)} sections")
     print(f"🎯 Keywords: {', '.join(kws)}")
     
     print(f"\n📋 Research Outline:")
@@ -71,13 +92,6 @@ def main(question: str):
     # Create a more professional document structure
     doc = [f"# {question}", ""]
     
-    # Extract sections from outline, skipping the title and empty lines
-    sections = []
-    for line in outline.splitlines():
-        if line.startswith("## "):
-            section_title = line.strip("# ").strip()
-            sections.append(section_title)
-    
     print(f"\n✍️ Writing detailed report sections...")
     print(f"🤖 AI Writer: Generating {len(sections)} comprehensive sections\n")
     
@@ -86,7 +100,7 @@ def main(question: str):
         print(f"   🤖 AI Analyzing: Searching knowledge base for '{sec}'...")
         print(f"   🔍 AI Processing: Finding relevant sources and information...")
         
-        section_content = summariser.summarise_section(sec, index, texts)
+        section_content = summarise_section(sec, index, texts)
         
         print(f"   ✅ AI Generated: {len(section_content)} characters of content")
         print(f"   📊 Section quality: {len(section_content.split())} words, {len(section_content.splitlines())} paragraphs")

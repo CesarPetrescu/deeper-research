@@ -64,7 +64,8 @@ trap cleanup INT TERM
 
 # Start Python API server
 echo -e "${BLUE}🖥️ Starting Python API server on port ${API_PORT}...${NC}"
-cd /root/deeperres
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
 PYTHONPATH=. venv/bin/python deep_crawler/api_server.py > api_server.log 2>&1 &
 API_PID=$!
 
@@ -80,7 +81,7 @@ echo -e "${GREEN}✅ API server started successfully (PID: $API_PID)${NC}"
 
 # Start UI server
 echo -e "${BLUE}🌐 Starting UI server on port ${UI_PORT}...${NC}"
-cd /root/deeperres/ui
+cd "$SCRIPT_DIR/ui"
 npm start > ../ui_server.log 2>&1 &
 UI_PID=$!
 
