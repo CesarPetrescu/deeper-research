@@ -89,8 +89,22 @@ def summarise_section(section_title: str, index: Any, texts: List[str]) -> str:
         return synthesized_content
         
     except Exception as e:
-        print(f"⚠️ Synthesis error: {e}")
-        return _fallback_summarization(section_title, texts)
+        print(f"⚠️ Enhanced synthesis error: {e}")
+        print(f"🔧 Error type: {type(e).__name__}")
+        print(f"🔧 Section title: {section_title}")
+        print(f"🔧 Number of relevant texts: {len(relevant_texts) if 'relevant_texts' in locals() else 'unknown'}")
+        print(f"🔧 Index type: {type(index)}")
+        
+        # Try direct synthesis as backup
+        print(f"🔄 Attempting direct LLM synthesis...")
+        try:
+            from .direct_synthesis import synthesise_section_direct
+            result = synthesise_section_direct(section_title, index, texts)
+            print(f"✅ Direct synthesis successful: {len(result)} characters")
+            return result
+        except Exception as direct_error:
+            print(f"⚠️ Direct synthesis also failed: {direct_error}")
+            return _fallback_summarization(section_title, texts)
 
 def _improve_content_quality(content: str, section_title: str, sources: List[str]) -> str:
     """

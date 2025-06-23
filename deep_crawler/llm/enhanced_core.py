@@ -256,19 +256,24 @@ class ContentSynthesizer(EnhancedLLMCore):
         # Prepare source summary
         sources_summary = f"Total sources: {len(full_texts)}, Relevant excerpts: {len(relevant_docs)}"
         
-        # Get research context
-        research_context = self.get_research_context()
+        # Simplified research context to avoid token issues
+        research_context = "Current research focuses on comprehensive analysis and synthesis."
         
-        # Prepare content excerpts (limit to avoid token limits)
+        # Prepare content excerpts with better token management
         content_excerpts = "\n\n".join([
-            f"Source {i+1}: {doc[:500]}..." if len(doc) > 500 else f"Source {i+1}: {doc}"
-            for i, doc in enumerate(relevant_docs[:5])  # Limit to 5 most relevant
+            f"Source {i+1}: {doc[:400]}..." if len(doc) > 400 else f"Source {i+1}: {doc}"
+            for i, doc in enumerate(relevant_docs[:3])  # Limit to 3 most relevant
         ])
+        
+        # Additional safety: limit total content_excerpts length
+        if len(content_excerpts) > 2000:
+            content_excerpts = content_excerpts[:2000] + "..."
         
         try:
             print(f"🔍 AI Processing: Analyzing {len(relevant_docs)} relevant sources...")
+            print(f"🔧 Debug: Content excerpts length: {len(content_excerpts)} chars")
             
-            # Execute the synthesis chain
+            # Execute the synthesis chain with timeout handling
             result = self.synthesis_chain.invoke({
                 "section_title": section_title,
                 "research_context": research_context,

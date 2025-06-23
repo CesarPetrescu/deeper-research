@@ -71,11 +71,12 @@ class CustomOpenAILLM(LLM):
             data["stop"] = stop
         
         try:
+            print(f"🔧 LLM API Call: {self.model} at {self.api_base}")
             response = requests.post(
                 f"{self.api_base}/chat/completions",
                 headers=headers,
                 json=data,
-                timeout=120
+                timeout=30  # Reduced timeout to 30 seconds
             )
             response.raise_for_status()
             
