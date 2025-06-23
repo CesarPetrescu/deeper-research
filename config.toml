@@ -1,0 +1,31 @@
+[api]
+openai_base   = "http://192.168.100.199:5515/v1"
+openai_key    = "none"
+chat_model    = "mistral-small-3.2-24b-instruct-2506"
+embed_model   = "text-embedding-granite-embedding-278m-multilingual"
+
+[llm]
+api_key       = "none"  # OpenAI API key (or "none" for local)
+model         = "mistral-small-3.2-24b-instruct-2506"
+temperature   = 0.7
+max_tokens    = 4096
+use_langgraph = false   # Set to true to enable advanced LangGraph workflows
+
+[firecrawl]
+base_url      = "http://localhost:3002"
+concurrency   = 8            # async tasks
+limit_per_url = 15           # pages per seed (increased for more depth)
+
+[search]
+searx_url         = "https://searx.sprk.ro/search"
+urls_per_keyword  = 6        # increased for more sources
+
+[index]
+snippets_per_sec  = 12       # increased for more content per section
+
+[server]
+api_host     = "0.0.0.0"
+api_port     = 3001
+ui_host      = "0.0.0.0" 
+ui_port      = 3000
+api_backend  = "http://127.0.0.1:3001"

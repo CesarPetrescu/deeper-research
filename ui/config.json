@@ -1,0 +1,13 @@
+{
+  "api": {
+    "baseUrl": "http://127.0.0.1:3001",
+    "endpoints": {
+      "research": "/api/research",
+      "download": "/api/download"
+    }
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 3000
+  }
+}

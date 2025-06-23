@@ -4,14 +4,15 @@ import functools
 from pathlib import Path
 from openai import OpenAI, OpenAIError
 
-CFG = toml.load(Path(__file__).parents[1] / "config.toml")
+# Load config from root directory  
+CFG = toml.load(Path(__file__).parents[2] / "config.toml")
 
 client = OpenAI(
     base_url=CFG["api"]["openai_base"],
     api_key=CFG["api"]["openai_key"],
 )
 
-def chat(system, user, max_tokens=512, model=None):
+def chat(system, user, max_tokens=1024, model=None):
     model = model or CFG["api"]["chat_model"]
     try:
         r = client.chat.completions.create(

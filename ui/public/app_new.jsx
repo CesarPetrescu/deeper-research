@@ -84,75 +84,37 @@ function App() {
       } else {
         setLines((l) => [...l, e.data]);
         
-        // Enhanced progress tracking with more granular steps
-        if (e.data.includes('🤖 AI Planner:')) {
-          setCurrentStep('AI analyzing question and creating strategy...');
+        // Update progress and step based on content
+        if (e.data.includes('🔍 Researching:')) {
+          setCurrentStep('Planning research strategy...');
           setProgress(5);
-        } else if (e.data.includes('Research Plan:') && e.data.includes('keywords')) {
-          setCurrentStep('Research plan created, identifying sources...');
-          setProgress(10);
-        } else if (e.data.includes('🔍 Searching for sources')) {
-          setCurrentStep('Searching for relevant sources...');
+        } else if (e.data.includes('📋 Research Plan:')) {
+          setCurrentStep('Gathering sources...');
           setProgress(15);
-        } else if (e.data.includes('🔎') && e.data.includes('Searching:')) {
-          // Extract search progress
-          const searchMatch = e.data.match(/\[(\d+)\/(\d+)\]/);
-          if (searchMatch) {
-            const current = parseInt(searchMatch[1]);
-            const total = parseInt(searchMatch[2]);
-            const searchProgress = 15 + (current / total * 10);
-            setProgress(searchProgress);
-            setCurrentStep(`Searching sources (${current}/${total})...`);
-          }
-        } else if (e.data.includes('🕷️ Starting web crawling')) {
-          setCurrentStep('Starting web crawling process...');
+        } else if (e.data.includes('🌐 Found') && e.data.includes('URLs')) {
+          setCurrentStep('Crawling websites...');
           setProgress(25);
-        } else if (e.data.includes('🌐') && e.data.includes('Crawling:')) {
-          // Extract crawling progress
-          const crawlMatch = e.data.match(/\[(\d+)\/(\d+)\]/);
-          if (crawlMatch) {
-            const current = parseInt(crawlMatch[1]);
-            const total = parseInt(crawlMatch[2]);
-            const crawlProgress = 25 + (current / total * 25);
-            setProgress(crawlProgress);
-            setCurrentStep(`Crawling websites (${current}/${total})...`);
-          }
-        } else if (e.data.includes('✅ Crawling complete')) {
+        } else if (e.data.includes('📄 Successfully crawled')) {
           setCurrentStep('Building knowledge index...');
+          setProgress(40);
+        } else if (e.data.includes('🔗 Built search index')) {
+          setCurrentStep('Writing report sections...');
           setProgress(50);
-        } else if (e.data.includes('🔗 Building knowledge index')) {
-          setCurrentStep('Processing documents and building search index...');
-          setProgress(55);
-        } else if (e.data.includes('✅ Search index built')) {
-          setCurrentStep('Starting AI content generation...');
+        } else if (e.data.includes('✍️ Writing') && e.data.includes('sections')) {
+          setCurrentStep('Analyzing and writing...');
           setProgress(60);
-        } else if (e.data.includes('🤖 AI Writer:')) {
-          setCurrentStep('AI analyzing content and preparing sections...');
-          setProgress(65);
-        } else if (e.data.includes('📝 Section') && e.data.includes('/')) {
-          const sectionMatch = e.data.match(/Section (\d+)\/(\d+)/);
-          if (sectionMatch) {
-            const current = parseInt(sectionMatch[1]);
-            const total = parseInt(sectionMatch[2]);
-            const sectionProgress = 65 + (current / total * 25);
+        } else if (e.data.includes('📝 Section')) {
+          const match = e.data.match(/Section (\d+)\/(\d+)/);
+          if (match) {
+            const current = parseInt(match[1]);
+            const total = parseInt(match[2]);
+            const sectionProgress = 60 + (current / total * 30);
             setProgress(sectionProgress);
-            setCurrentStep(`AI writing section ${current} of ${total}...`);
+            setCurrentStep(`Writing section ${current} of ${total}...`);
           }
-        } else if (e.data.includes('🤖 AI Analyzing:')) {
-          setCurrentStep('AI analyzing sources for current section...');
-        } else if (e.data.includes('🔍 AI Processing:')) {
-          setCurrentStep('AI processing and synthesizing information...');
-        } else if (e.data.includes('✅ AI Generated:')) {
-          setCurrentStep('AI completed section, moving to next...');
         } else if (e.data.includes('📚 Adding references')) {
-          setCurrentStep('Adding references and citations...');
-          setProgress(90);
-        } else if (e.data.includes('🔍 AI Verifier:')) {
-          setCurrentStep('AI verifying citations and accuracy...');
+          setCurrentStep('Finalizing references...');
           setProgress(95);
-        } else if (e.data.includes('🎉 Research Complete')) {
-          setCurrentStep('Finalizing report...');
-          setProgress(98);
         }
       }
     };
@@ -559,86 +521,34 @@ function App() {
               fontWeight: '700',
               color: '#1f2937'
             }}>
-              🔬 Live Research Progress
+              🔬 Research Progress
             </h3>
             <div style={{ 
-              background: '#1a1a1a',
-              color: '#e5e7eb',
+              background: '#1f2937',
+              color: '#f9fafb',
               borderRadius: '12px',
               padding: '1.5rem',
               fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
               fontSize: '0.9rem',
               lineHeight: '1.6',
-              maxHeight: '600px',
+              maxHeight: '500px',
               overflowY: 'auto',
               border: '1px solid #374151'
             }}>
-              {lines.map((line, index) => {
-                // Color coding for different types of messages
-                let color = '#e5e7eb';
-                let icon = '';
-                
-                if (line.includes('🔍') || line.includes('🤖')) {
-                  color = '#60a5fa'; // Blue for AI actions
-                } else if (line.includes('✅') || line.includes('🎉')) {
-                  color = '#34d399'; // Green for success
-                } else if (line.includes('⚠️') || line.includes('❌')) {
-                  color = '#f87171'; // Red for warnings/errors
-                } else if (line.includes('📋') || line.includes('📊')) {
-                  color = '#a78bfa'; // Purple for data/stats
-                } else if (line.includes('🌐') || line.includes('📄')) {
-                  color = '#fbbf24'; // Yellow for web operations
-                } else if (line.includes('📝') || line.includes('✍️')) {
-                  color = '#fb7185'; // Pink for writing
-                }
-                
-                return (
-                  <div 
-                    key={index} 
-                    style={{ 
-                      marginBottom: '0.5rem',
-                      color: color,
-                      opacity: index === lines.length - 1 ? 1 : 0.8,
-                      transform: index === lines.length - 1 ? 'translateX(2px)' : 'none',
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    {line}
-                  </div>
-                );
-              })}
+              {lines.map((line, index) => (
+                <div key={index} style={{ marginBottom: '0.5rem' }}>
+                  {line}
+                </div>
+              ))}
               {isLoading && (
                 <div style={{ 
                   color: '#60a5fa',
-                  animation: 'pulse 2s infinite',
-                  marginTop: '1rem',
-                  padding: '0.5rem',
-                  background: 'rgba(96, 165, 250, 0.1)',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(96, 165, 250, 0.2)'
+                  animation: 'pulse 2s infinite'
                 }}>
-                  🔄 {currentStep}
+                  ● {currentStep}
                 </div>
               )}
             </div>
-            
-            {/* Mini stats bar */}
-            {lines.length > 0 && (
-              <div style={{
-                marginTop: '1rem',
-                padding: '1rem',
-                background: 'rgba(243, 244, 246, 0.5)',
-                borderRadius: '8px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '0.9rem',
-                color: '#6b7280'
-              }}>
-                <span>📊 {lines.length} progress updates</span>
-                <span>⏱️ {Math.round(progress)}% complete</span>
-                <span>🔄 {isLoading ? 'Active' : 'Finished'}</span>
-              </div>
-            )}
           </div>
         )}
       </div>

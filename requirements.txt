@@ -1,0 +1,31 @@
+# Core dependencies
+toml
+requests
+tqdm
+asyncio
+aiohttp
+numpy
+faiss-cpu
+openai
+readability-lxml
+beautifulsoup4
+lxml
+flask
+flask-cors
+markdown
+python-docx
+reportlab
+
+# LangChain AI orchestration dependencies
+langchain>=0.1.0
+langchain-openai>=0.1.0
+langchain-community>=0.1.0
+langchain-core>=0.1.0
+langgraph>=0.1.0
+
+# Additional AI/ML dependencies
+pydantic>=2.0.0
+pydantic-core
+
+# Optional but recommended for better performance
+tiktoken
