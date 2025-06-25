@@ -136,8 +136,8 @@ def convert_to_pdf(markdown_content, title):
 @app.route('/api/research', methods=['GET'])
 def research():
     question = request.args.get('q')
-    if not question:
-        return jsonify({'error': 'Missing q parameter'}), 400
+    if not question or not question.strip():
+        return jsonify({'error': 'Missing or empty q parameter'}), 400
     
     # Generate a unique ID for this research session
     research_id = str(uuid.uuid4())

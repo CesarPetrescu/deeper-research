@@ -8,12 +8,12 @@ from openai import OpenAI, OpenAIError
 CFG = toml.load(Path(__file__).parents[2] / "config.toml")
 
 client = OpenAI(
-    base_url=CFG["api"]["openai_base"],
-    api_key=CFG["api"]["openai_key"],
+    base_url=CFG["llm"]["base_url"],
+    api_key=CFG["llm"]["api_key"],
 )
 
 def chat(system, user, max_tokens=1024, model=None):
-    model = model or CFG["api"]["chat_model"]
+    model = model or CFG["llm"]["chat_model"]
     try:
         r = client.chat.completions.create(
             model=model,

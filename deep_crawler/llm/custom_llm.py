@@ -28,9 +28,9 @@ class CustomOpenAILLM(LLM):
     def __init__(self, **kwargs):
         # Load configuration values
         config_values = {
-            "api_base": CONFIG["api"]["openai_base"],
-            "api_key": CONFIG["api"]["openai_key"],
-            "model": CONFIG["api"]["chat_model"],
+            "api_base": CONFIG["llm"]["base_url"],
+            "api_key": CONFIG["llm"]["api_key"],
+            "model": CONFIG["llm"]["chat_model"],
             "temperature": CONFIG.get("llm", {}).get("temperature", 0.7),
             "max_tokens": CONFIG.get("llm", {}).get("max_tokens", 4096)
         }
