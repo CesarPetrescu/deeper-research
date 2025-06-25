@@ -114,6 +114,70 @@ You can also use the command-line interface to run the research assistant:
 python deep_crawler/cli.py "Your research question"
 ```
 
+## Local LLM and Firecrawl Setup
+
+This project is designed to work with local LLM providers and a local Firecrawl instance. Here's a quick guide to get you started.
+
+### Firecrawl
+
+Firecrawl is used to crawl websites and extract content. To run it locally:
+
+1.  **Run the Firecrawl Docker container:**
+
+    ```bash
+    docker run -d -p 3002:3002 --name firecrawl firecrawl/firecrawl
+    ```
+
+2.  **Update your `config.toml`:**
+
+    ```toml
+    [firecrawl]
+    base_url      = "http://localhost:3002"
+    ```
+
+### Local LLM (Ollama)
+
+Ollama is a great way to run large language models locally.
+
+1.  **Install and run Ollama:**
+
+    Follow the instructions on the [Ollama website](https://ollama.ai/) to install and run Ollama.
+
+2.  **Pull a model:**
+
+    ```bash
+    ollama pull mistral
+    ```
+
+3.  **Update your `config.toml`:**
+
+    ```toml
+    [llm]
+    base_url      = "http://localhost:11434/v1"
+    chat_model    = "mistral"
+    ```
+
+### Local LLM (Llama.cpp)
+
+Llama.cpp is a high-performance option for running LLMs locally.
+
+1.  **Install and run Llama.cpp:**
+
+    Follow the instructions on the [Llama.cpp GitHub repository](https://github.com/ggerganov/llama.cpp) to build and run the server.
+
+2.  **Start the server:**
+
+    ```bash
+    ./server -m /path/to/your/model.gguf -c 4096
+    ```
+
+3.  **Update your `config.toml`:**
+
+    ```toml
+    [llm]
+    base_url      = "http://localhost:8080/v1"
+    ```
+
 ## Project Structure
 
 ```
